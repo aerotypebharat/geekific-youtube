@@ -22,18 +22,12 @@
  * SOFTWARE.
  */
 
-package com.youtube.geekific.app.service;
+package com.youtube.geekific.app.exception;
 
-import com.youtube.geekific.app.Video;
-import com.youtube.geekific.app.exception.VideoNotFoundException;
-import com.youtube.geekific.app.exception.VideoTitleAlreadyExistsException;
+public class VideoTitleAlreadyExistsException extends Exception {
 
-public interface IVideoService {
-
-    String createVideo(Video video) throws VideoTitleAlreadyExistsException;
-
-    Video getVideoByTitle(String title) throws VideoNotFoundException;
-
-    Long likeVideo(String id) throws VideoNotFoundException;
+    public VideoTitleAlreadyExistsException(String prop) {
+        super(String.format("Video with the following Id/Title: %s already exists", prop));
+    }
 
 }

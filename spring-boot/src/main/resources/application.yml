@@ -8,3 +8,6 @@ spring:
     validate-on-migrate: true
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  graphql:
+    graphiql:
+      enabled: true

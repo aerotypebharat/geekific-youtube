@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Geekific (https://www.youtube.com/c/Geekific)
+ * Copyright (c) 2025 Geekific (https://www.youtube.com/c/Geekific)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,14 @@ import com.youtube.geekific.api.model.CreateVideoApiRequest;
 import com.youtube.geekific.api.model.GetVideoApiResponse;
 import com.youtube.geekific.api.model.LikeVideoApiResponse;
 import com.youtube.geekific.app.exception.VideoNotFoundException;
+import com.youtube.geekific.app.exception.VideoTitleAlreadyExistsException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,8 +58,9 @@ public interface VideoApi {
             }
     )
     @PostMapping()
+    @MutationMapping
     @ResponseStatus(HttpStatus.CREATED)
-    String create(@RequestBody CreateVideoApiRequest request);
+    String create(@RequestBody @Argument CreateVideoApiRequest request) throws VideoTitleAlreadyExistsException;
 
     @Operation(
             summary = "Adds a like to the provided video",
@@ -69,7 +73,8 @@ public interface VideoApi {
             }
     )
     @PutMapping("/{id}")
-    LikeVideoApiResponse like(@PathVariable String id) throws VideoNotFoundException;
+    @MutationMapping
+    LikeVideoApiResponse like(@PathVariable @Argument String id) throws VideoNotFoundException;
 
     @Operation(
             summary = "Returns a video details given its title",
@@ -82,6 +87,7 @@ public interface VideoApi {
             }
     )
     @GetMapping("/{title}")
-    GetVideoApiResponse getByTitle(@PathVariable String title) throws VideoNotFoundException;
+    @MutationMapping
+    GetVideoApiResponse getByTitle(@PathVariable @Argument String title) throws VideoNotFoundException;
 
 }

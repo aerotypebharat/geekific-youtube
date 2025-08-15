@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Geekific (https://www.youtube.com/c/Geekific)
+ * Copyright (c) 2025 Geekific (https://www.youtube.com/c/Geekific)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,11 +30,14 @@ import com.youtube.geekific.api.model.GetVideoApiResponse;
 import com.youtube.geekific.api.model.LikeVideoApiResponse;
 import com.youtube.geekific.app.Video;
 import com.youtube.geekific.app.exception.VideoNotFoundException;
+import com.youtube.geekific.app.exception.VideoTitleAlreadyExistsException;
 import com.youtube.geekific.app.service.IVideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +48,7 @@ public class VideoController implements VideoApi {
 
     @Override
     @ResponseStatus(HttpStatus.CREATED)
-    public String create(CreateVideoApiRequest request) {
+    public String create(CreateVideoApiRequest request) throws VideoTitleAlreadyExistsException {
         return service.createVideo(mapper.toDomainEntity(request));
     }
 
@@ -62,8 +65,13 @@ public class VideoController implements VideoApi {
     }
 
     @ExceptionHandler(VideoNotFoundException.class)
-    protected ResponseEntity<String> handleNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    protected ResponseEntity<String> handleNotFound(VideoNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(VideoTitleAlreadyExistsException.class)
+    protected ResponseEntity<String> handleAlreadyExists(VideoTitleAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 }

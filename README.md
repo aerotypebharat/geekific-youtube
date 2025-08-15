@@ -3,7 +3,7 @@
 <br />
 <div style="text-align: center;">
     <a href="https://www.youtube.com/c/Geekific">
-    <img src="images/logo.jpg" alt="Logo" width="200" height="200">
+    <img src="images/logo.jpg" alt="Logo" width="200" height="200" style="border-radius: 50%;">
     </a>
 
 <h3>Geekific's Official GitHub Repository</h3>

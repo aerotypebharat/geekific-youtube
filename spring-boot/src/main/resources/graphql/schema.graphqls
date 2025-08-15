@@ -1,0 +1,29 @@
+input CreateVideoApiRequest {
+    title: String!
+    author: String!
+    description: String!
+    duration: String
+}
+
+type LikeVideoApiResponse {
+    id: String!
+    likes: Float!
+}
+
+type GetVideoApiResponse {
+    id: String!
+    title: String!
+    author: String!
+    description: String!
+    likes: Float!
+    duration: String!
+}
+
+type Query {
+    getByTitle(title: String!): GetVideoApiResponse!
+}
+
+type Mutation {
+    create(request: CreateVideoApiRequest!) : String!
+    like(id: String!) : LikeVideoApiResponse!
+}

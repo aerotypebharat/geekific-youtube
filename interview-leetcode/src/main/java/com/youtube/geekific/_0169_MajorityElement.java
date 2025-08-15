@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Geekific (https://www.youtube.com/c/Geekific)
+ * Copyright (c) 2025 Geekific (https://www.youtube.com/c/Geekific)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,29 +25,46 @@
 package com.youtube.geekific;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
- * Video Reference: https://youtu.be/12QVcp-vChY
- * LeetCode Reference: https://leetcode.com/problems/merge-intervals/
+ * Video Reference,
+ * LeetCode Reference: https://leetcode.com/problems/majority-element/
  */
-public class _0056_MergeIntervals {
+public class _0169_MajorityElement {
 
-    public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
-        LinkedList<int[]> merged = new LinkedList<>();
-        for (int[] interval : intervals) {
-            // if the current interval does not overlap with the previous, append it
-            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
-                merged.addLast(interval);
-            }
-            // otherwise, merge the current and previous intervals
-            else {
-                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
+    public int majorityElement_Sorting(int[] nums) {
+        Arrays.sort(nums);
+        return nums[nums.length / 2];
+    }
+
+    public int majorityElement_Maps(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+            if (map.get(num) > nums.length / 2) {
+                return num;
             }
         }
-        return merged.toArray(int[][]::new);
+
+        return map.entrySet().stream()
+                .filter(e -> e.getValue() > nums.length / 2)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(0);
+    }
+
+    public int majorityElement_BoyerMoore(int[] nums) {
+        int count = 0;
+        int candidate = 0;
+        for (int num : nums) {
+            if (count == 0) {
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+        return candidate;
     }
 
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Geekific (https://www.youtube.com/c/Geekific)
+ * Copyright (c) 2025 Geekific (https://www.youtube.com/c/Geekific)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,30 +24,36 @@
 
 package com.youtube.geekific;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.*;
 
 /*
- * Video Reference: https://youtu.be/12QVcp-vChY
- * LeetCode Reference: https://leetcode.com/problems/merge-intervals/
+ * Video Reference: https://youtu.be/x6LN9HPg4BY
+ * LeetCode Reference: https://leetcode.com/problems/repeated-dna-sequences/
  */
-public class _0056_MergeIntervals {
+public class _0187_RepeatedDnaSequences {
 
-    public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
-        LinkedList<int[]> merged = new LinkedList<>();
-        for (int[] interval : intervals) {
-            // if the current interval does not overlap with the previous, append it
-            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
-                merged.addLast(interval);
-            }
-            // otherwise, merge the current and previous intervals
-            else {
-                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
+    public static List<String> findRepeatedDnaSequences_Map(String s) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i <= s.length() - 10; i++) {
+            String sub = s.substring(i, i + 10);
+            map.put(sub, map.getOrDefault(sub, 0) + 1);
+        }
+        return map.entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
+    public List<String> findRepeatedDnaSequences_Set(String s) {
+        Set<String> seen = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+        for (int i = 0; i <= s.length() - 10; i++) {
+            String sub = s.substring(i, i + 10);
+            if (!seen.add(sub)) {
+                duplicates.add(sub);
             }
         }
-        return merged.toArray(int[][]::new);
+        return new ArrayList<>(duplicates);
     }
 
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Geekific (https://www.youtube.com/c/Geekific)
+ * Copyright (c) 2025 Geekific (https://www.youtube.com/c/Geekific)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package com.youtube.geekific.app.service;
 
 import com.youtube.geekific.app.Video;
 import com.youtube.geekific.app.exception.VideoNotFoundException;
+import com.youtube.geekific.app.exception.VideoTitleAlreadyExistsException;
 import com.youtube.geekific.infra.IRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,7 +42,11 @@ public class VideoService implements IVideoService {
     private final IRepository repository;
 
     @Override
-    public String createVideo(Video video) {
+    public String createVideo(Video video) throws VideoTitleAlreadyExistsException {
+        Optional<Video> existingVideo = repository.findByTitle(video.getTitle());
+        if (existingVideo.isPresent()) {
+            throw new VideoTitleAlreadyExistsException(existingVideo.get().getTitle());
+        }
         Video savedEntity = repository.save(video);
         return String.valueOf(savedEntity.getId());
     }
